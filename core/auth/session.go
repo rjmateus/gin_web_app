@@ -81,3 +81,6 @@ var InMemoryAuth = AuthMethod{
 	Logout:   logout,
 	Handlers: []gin.HandlerFunc{AuthRequiredSession},
 }
+
+// curl -v -d 'username=foo&password=bar' -X POST http://localhost:8080/login
+//  curl -v --cookie "mysession=MTY1MTYxMTY0MnxEdi1CQkFFQ180SUFBUkFCRUFBQUlmLUNBQUVHYzNSeWFXNW5EQVlBQkhWelpYSUdjM1J5YVc1bkRBVUFBMlp2Ync9PXyqJZRZl9E9Gp7a2w7YMbdUzjgsI0RDzPUyvYxXKmQ0cQ==" -X GET http://localhost:8080/admin

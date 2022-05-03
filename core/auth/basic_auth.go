@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func authenticate() gin.HandlerFunc {
+func authenticateBasic() gin.HandlerFunc {
 	return gin.BasicAuth(gin.Accounts{
 		"foo":  "bar", // user:foo password:bar   --> base64: Zm9vOmJhcg==
 		"manu": "123", // user:manu password:123  --> base64: bWFudToxMjM=
@@ -24,7 +24,7 @@ func loadUser(c *gin.Context) {
 }
 
 var BasicAuth = AuthMethod{
-	Handlers: []gin.HandlerFunc{authenticate(), loadUser},
+	Handlers: []gin.HandlerFunc{authenticateBasic(), loadUser},
 }
 
 /* example curl for /admin with basicauth header

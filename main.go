@@ -2,17 +2,13 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"os"
-
-	"gin_web_app/auth"
-
+	"gin_web_app/core/auth"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func checkRole(role string) func(*gin.Context) {
+func withRole(role string) func(*gin.Context) {
 
 	return func(c *gin.Context) {
 		user := c.MustGet(auth.UserKey).(auth.AuthUser)
@@ -32,14 +28,11 @@ func checkRole(role string) func(*gin.Context) {
 	}
 }
 
-var secret = []byte("secret")
+var secretMain = []byte("secret")
 
-func setupRouter(authMethod string) *gin.Engine {
+func setupRouterMain() *gin.Engine {
 	r := gin.Default()
-
-	if authMethod == "mem" {
-		r.Use(sessions.Sessions("mysession", sessions.NewCookieStore(secret)))
-	}
+	r.Use(sessions.Sessions("mysession", sessions.NewCookieStore(secretMain)))
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
@@ -60,8 +53,8 @@ func setupRouter(authMethod string) *gin.Engine {
 
 	// Get user value
 	authorized.GET("all", all)
-	authorized.GET("user", checkRole("user"), user)
-	authorized.GET("admin", checkRole("admin"), admin)
+	authorized.GET("user", withRole("user"), user)
+	authorized.GET("admin", withRole("admin"), admin)
 
 	return r
 }
@@ -81,10 +74,7 @@ func all(c *gin.Context) {
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatal("no auth method provided")
-	}
-	r := setupRouter(os.Args[1])
+	r := setupRouterMain()
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":8080")
 }
